@@ -20,6 +20,16 @@
         </form>
         <div id="weather-info" class="weather-display"></div>
         <form id="intake-form">
+            <div class="input-group">
+                <div class="input-item">
+                    <label for="weight">Your Weight (kg):<br><span class="note">(Note: 1 kg = 2.20462 lbs)</span></label>
+                    <input type="number" id="weight" placeholder="Enter your weight in kg">
+                </div>
+                <div class="input-item">
+                    <label for="exercise">Exercise Duration (minutes):</label>
+                    <input type="number" id="exercise" placeholder="Enter exercise duration">
+                </div>
+            </div>
             <label for="intake"><b>Water Intake (ml) in 24 Hours:</b></label>
             <span>(1 glass = 250 ml, 1 bottle = 500 ml)</span>
             <input type="number" id="intake" min="0" placeholder="Enter water intake">
@@ -32,3 +42,4 @@
     <script src="scripts/script.js"></script>
 </body>
 </html>
+
