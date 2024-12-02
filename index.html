@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimeHydrate</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Drinking Water Intake Tracker Based on Weather</h1>
+        
+        <form id="weather-form">
+            <label for="city">City:</label>
+            <input type="text" id="city" placeholder="Enter your city">
+            <div class="button-group">
+                <button type="button" id="fetch-weather">Get Weather</button>
+                <button type="button" id="use-location">Use My Location</button>
+            </div>
+        </form>
+        <div id="weather-info" class="weather-display"></div>
+        <form id="intake-form">
+            <label for="intake"><b>Water Intake (ml) in 24 Hours:</b></label>
+            <span>(1 glass = 250 ml, 1 bottle = 500 ml)</span>
+            <input type="number" id="intake" min="0" placeholder="Enter water intake">
+            <button type="submit">Add Intake</button>
+        </form>
+        <div id="weather-recommendation"></div>
+        <div id="error-message"></div>
+        <button id="reset-button">&#x1F504;</button>
+    </div>
+    <script src="scripts/script.js"></script>
+</body>
+</html>
