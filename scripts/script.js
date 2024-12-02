@@ -5,6 +5,8 @@ const cityInput = document.getElementById('city');
 const weatherInfo = document.getElementById('weather-info');
 const intakeForm = document.getElementById('intake-form');
 const intakeInput = document.getElementById('intake');
+const weightInput = document.getElementById('weight');
+const exerciseInput = document.getElementById('exercise');
 const weatherRecommendation = document.getElementById('weather-recommendation');
 const errorMessage = document.getElementById('error-message');
 const resetButton = document.getElementById('reset-button');
@@ -45,6 +47,7 @@ async function fetchWeather(city) {
         alert('Unable to fetch weather data.');
     }
 }
+
 intakeForm.addEventListener('submit', (e) => {
     e.preventDefault();
     let intakeAmount = parseFloat(intakeInput.value);
@@ -59,6 +62,7 @@ intakeForm.addEventListener('submit', (e) => {
         errorMessage.textContent = 'Enter a valid water intake amount.';
     }
 });
+
 document.getElementById('fetch-weather').addEventListener('click', () => {
     const city = cityInput.value.trim();
     if (city) {
@@ -67,6 +71,7 @@ document.getElementById('fetch-weather').addEventListener('click', () => {
         alert('Please enter a city name.');
     }
 });
+
 document.getElementById('use-location').addEventListener('click', () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -127,19 +132,43 @@ document.getElementById('use-location').addEventListener('click', () => {
         alert('Geolocation is not supported by your browser.');
     }
 });
-function updateWaterRecommendation() {
-    if (temperature !== null) {
-        const recommendedIntake = (temperature >= 30 ? 3000 : 2000);
-        const remainingIntake = recommendedIntake - totalWaterIntake;
-        const glasses = Math.ceil(Math.max(remainingIntake, 0) / 250);
 
-        if (intakeClicked) {
-            weatherRecommendation.innerHTML = remainingIntake > 0
-                ? `<p>You need to drink <strong>${remainingIntake.toFixed(1)} ml</strong> (${glasses} glasses) more today.</p>`
-                : `<p>You have met your water intake goal. Great job!</p>`;
+function calculateRecommendedIntake(weight, exerciseMinutes, temperature) {
+    let weightInPounds = weight * 2.20462; 
+    let recommendedIntakeOunces = weightInPounds * 
+    recommendedIntakeOunces += (exerciseMinutes / 30) * 12; 
+    if (temperature >= 20) {
+        recommendedIntakeOunces += 16; 
+    }
+    return recommendedIntakeOunces;
+}
+
+function updateWaterRecommendation() {
+    const weight = parseFloat(weightInput.value);
+    const exerciseMinutes = parseFloat(exerciseInput.value);
+    const maxWeight = 635; 
+    const maxExercise = 1440; 
+    if (!isNaN(weight) && weight > 0 && weight <= maxWeight && !isNaN(exerciseMinutes) && exerciseMinutes >= 0 && exerciseMinutes <= maxExercise && temperature !== null) {
+        const recommendedIntakeOunces = calculateRecommendedIntake(weight, exerciseMinutes, temperature);
+        const recommendedIntakeMl = recommendedIntakeOunces * 29.5735; // Convert ounces to ml
+        const remainingIntake = recommendedIntakeMl - totalWaterIntake;
+        const bottlesNeeded = Math.ceil(Math.max(remainingIntake, 0) / 500);
+        weatherRecommendation.innerHTML = remainingIntake > 0
+            ? `<p>You need to drink <strong>${remainingIntake.toFixed(1)} ml</strong> (${bottlesNeeded} bottles) more today.</p>`
+            : `<p>You have met your water intake goal. Great job!</p>`;
+        weightInput.value = '';
+        exerciseInput.value = '';
+    } else {
+        if (isNaN(weight) || weight <= 0 || weight > maxWeight) {
+            errorMessage.textContent = `Enter a valid weight (1 - ${maxWeight} kg).`;
+        } else if (isNaN(exerciseMinutes) || exerciseMinutes < 0 || exerciseMinutes > maxExercise) {
+            errorMessage.textContent = `Enter a valid exercise duration (0 - ${maxExercise} minutes).`;
+        } else {
+            errorMessage.textContent = 'Please enter valid weight and exercise duration.';
         }
     }
 }
+
 resetButton.addEventListener('click', () => {
     location.reload();
 });
